@@ -7,11 +7,11 @@ class BaseTensor(torch.Tensor):
     # See https://github.com/pytorch/pytorch/pull/73727 ; this is necessary
     # to ensure that super().__new__ can cooperate with each other
     @staticmethod
-    def __new__(cls, elem, *, requires_grad=None):
+    def __new__(cls, elem, *, requires_grad=None, **kwargs):
         if requires_grad is None:
-            return super().__new__(cls, elem)  # type: ignore[call-arg]
+            return super().__new__(cls, elem, **kwargs)  # type: ignore[call-arg]
         else:
-            return cls._make_subclass(cls, elem, requires_grad)
+            return cls._make_subclass(cls, elem, requires_grad, **kwargs)
 
     # If __torch_dispatch__ is defined (which it will be for all our examples)
     # the default torch function implementation (which preserves subclasses)
